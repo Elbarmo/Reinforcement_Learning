@@ -4,4 +4,5 @@ My exercises while learning Reiforcement Learning. I use as a guide the lectures
 ## Contents
 This repository contains the following examples:
 1. Labyrinth_Problem: requires labyrinth1.json
-1. Random_Walk_Predictions
+1. Random_Walk_Predictions:
+1. Wind_Gridworld:
