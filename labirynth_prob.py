@@ -9,10 +9,6 @@ import random
 
 finalstate = "state28"
 
-#class state:
-#    def __init__(self, value):
-#        self.value = value
-#        
 def rand_policy():
     direction = random.randint(0,3)
     return direction
@@ -36,24 +32,20 @@ def policy_mean_value(state,reward_north,reward_south,reward_east,reward_west):
     return state["policy"]["north"]*reward_north+state["policy"]["south"]*reward_south+\
         state["policy"]["east"]*reward_east+state["policy"]["west"]*reward_west
         
+def update_policy_values(states_dic, state, direction, value_state):
+    value = calc_value(states_dic, states_dic[state],direction)
+    percentage = (value - value_state)/value_state
+    return states_dic[state]["policy"][direction]*(1-percentage)
+        
 def update_policy(states_dic):
     for state in states_dic.keys():
         if state != finalstate:
-            value_north = value(states_dic, states_dic[state],"north")
-            value_south = value(states_dic, states_dic[state],"south")
-            value_east = value(states_dic, states_dic[state],"east")
-            value_west = value(states_dic, states_dic[state],"west")
             value_state = states_dic[state]["value"]
             
-            percentage_north = (value_north - value_state)/value_state
-            percentage_south = (value_south - value_state)/value_state
-            percentage_east = (value_east - value_state)/value_state
-            percentage_west = (value_west - value_state)/value_state
-            
-            policy_north = states_dic[state]["policy"]["north"]*(1-percentage_north)
-            policy_south = states_dic[state]["policy"]["south"]*(1-percentage_south)
-            policy_east = states_dic[state]["policy"]["east"]*(1-percentage_east)
-            policy_west = states_dic[state]["policy"]["west"]*(1-percentage_west)
+            policy_north = update_policy_values(states_dic, state, "north", value_state)
+            policy_south = update_policy_values(states_dic, state, "south", value_state)
+            policy_east = update_policy_values(states_dic, state, "east", value_state)
+            policy_west = update_policy_values(states_dic, state, "west", value_state)
             
             norm = policy_north+policy_south+policy_east+policy_west
             
@@ -76,7 +68,7 @@ def shift_east_coord(coord):
 def shift_west_coord(coord):
     return "{}{}".format(int(coord[0])-1,coord[1])
         
-def value(states_dic,stated_dic,direction):
+def calc_value(states_dic,stated_dic,direction):
     if stated_dic["type"][direction] == 0:
         value_value = stated_dic["value"]
     else:
@@ -96,10 +88,10 @@ def value(states_dic,stated_dic,direction):
     
 def iter_values(states_dic,update_policy):
     for state in states_dic.keys():
-        value_north = value(states_dic,states_dic[state],"north")
-        value_south = value(states_dic,states_dic[state],"south")
-        value_east = value(states_dic,states_dic[state],"east")
-        value_west = value(states_dic,states_dic[state],"west")
+        value_north = calc_value(states_dic,states_dic[state],"north")
+        value_south = calc_value(states_dic,states_dic[state],"south")
+        value_east = calc_value(states_dic,states_dic[state],"east")
+        value_west = calc_value(states_dic,states_dic[state],"west")
         
         if update_policy == True:
             value_mean = policy_mean_value(states_dic[state],value_north,value_south,value_east,value_west)
