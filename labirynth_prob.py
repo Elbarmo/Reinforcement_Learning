@@ -13,7 +13,6 @@ def rand_policy():
     direction = random.randint(0,3)
     return direction
 
-
 def forward_direct_rand_policy():
     direction = random.randint(0,6)
     if direction == 6:
@@ -115,7 +114,6 @@ def iter_with_policy_update(states_dic):
     
         
 if __name__ == "__main__":
-    
     
     with open('labyrinth1.json') as f:
         labyrinth = json.load(f)

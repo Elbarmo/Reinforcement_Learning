@@ -32,29 +32,35 @@ def normalize_policy(policy):
     return policy/norm
 
 def calculate_new_state(state,action):
-    
-    if state["x"]== 2:
-        state["y"] -= 1
-        if state["y"] == -1:
-            state["y"] = 0
         
     if action == 0:
         state["y"] -= 1
-        if state["y"] == -1:
-            state["y"] = 0
+        
     elif action == 1:
         state["y"] += 1
-        if state["y"] == 5:
-            state["y"] = 4
     
     elif action == 2:
         state["x"] += 1
-        if state["x"] == 5:
-            state["x"] = 4
+
     elif action == 3:
         state["x"] -= 1
-        if state["x"] == -1:
-            state["x"] = 0
+
+    
+    if state["x"]== 2:
+        state["y"] -= 1
+   
+    elif state["x"]== 3:
+        state["y"] -= 1
+
+            
+    if state["x"] < 0:
+        state["x"] = 0
+    if state["y"] < 0:
+        state["y"] = 0
+    if state["x"] > 4:
+        state["x"] = 4
+    if state["y"] > 4:
+        state["y"] = 4
             
     return state
 
@@ -223,7 +229,7 @@ def SARSA_lambda_eval(policy,lambda_,count_states_action,count_good ,count_bad):
             if debug:
                 print("good")
                 #print(count_states_action)
-            reward = 100
+            reward = 10
             walking = False
             count_good += 1
             
@@ -236,7 +242,7 @@ def SARSA_lambda_eval(policy,lambda_,count_states_action,count_good ,count_bad):
             count_bad += 1
             
         else:            
-            reward = -1
+            reward = 0
             walking = True
             
         delta = reward + policy[new_action,new_state_ind] - policy[action,state_ind]
@@ -256,7 +262,7 @@ debug = False
 count_good = 0
 count_bad = 0
 count_states_action = np.zeros((4,25))
-for i in range(1000):
+for i in range(100000):
     if debug:
         print("")
         print(i)
@@ -278,7 +284,7 @@ optimal_policy = nice_display(policy)
 ######## Off-line CONTROL (SARSAMAX) ##########
 
 
-def SARSAmax(policy,lambda_,count_states_action,count_good ,count_bad):
+def SARSAmax(policy,count_states_action,count_good ,count_bad):
     sample = True
     while sample:
         init_state={"x":randint(0,4),"y":randint(0,4)}
@@ -328,7 +334,6 @@ def SARSAmax(policy,lambda_,count_states_action,count_good ,count_bad):
     return policy,count_good,count_bad,count_states_action
 
 policy = np.ones((4,25))
-lambda_ = 0.9
 debug = False
 count_good = 0
 count_bad = 0
@@ -338,7 +343,7 @@ for i in range(100000):
         print("")
         print(i)
         print(policy)
-    policy,count_good,count_bad,count_states_action = SARSAmax(policy,lambda_,count_states_action,count_good, count_bad)
+    policy,count_good,count_bad,count_states_action = SARSAmax(policy,count_states_action,count_good, count_bad)
 
 policy = normalize_policy(policy)
 
