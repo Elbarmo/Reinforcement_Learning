@@ -180,7 +180,7 @@ def SARSA_eval(policy,count_states_action):
         new_action = e_greedy_action(new_state_ind,policy)
         
         if new_state["x"] == terminate_state_plus["x"] and new_state["y"] == terminate_state_plus["y"]:
-            reward = 1
+            reward = 10
             walking = False
             
         elif new_state["x"] == terminate_state_minus["x"] and new_state["y"] == terminate_state_minus["y"]:  
@@ -265,7 +265,7 @@ def SARSAmax(policy,count_states_action):
         new_action = e_greedy_action(new_state_ind,policy)
         
         if new_state["x"] == terminate_state_plus["x"] and new_state["y"] == terminate_state_plus["y"]:
-            reward = 1
+            reward = 10
             walking = False
             
         elif new_state["x"] == terminate_state_minus["x"] and new_state["y"] == terminate_state_minus["y"]:  
@@ -316,7 +316,7 @@ if __name__ == "__main__":
         
         result_policy = nice_display(policy) 
         
-    elif type_eval == "SARSAmax":
+    elif type_eval == "SARSAmax": 
         count_states_action = np.zeros((4,25))
         for i in range(numIter):
             policy,count_states_action = SARSAmax(policy,count_states_action)
