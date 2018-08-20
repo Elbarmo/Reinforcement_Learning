@@ -50,7 +50,7 @@ def dynamics(state,action):
     return np.array([new_state_x,new_state_y,new_vel[0],new_vel[1]])
 
 def calculate_value(state,weights):
-    return np.dot(state,weights)[0][0]
+    return np.dot(state,weights)[0]
 
 if __name__ == "__main__":
     #### Linear function aproximation    
@@ -72,11 +72,19 @@ if __name__ == "__main__":
     ##### action = (r,theta)
     
     numIter = 1000000
+    num_iter = 1
     
     experience = random_walk(numIter,init_state)
     
-    
-    
+    for i in range(num_iter):
+        experience_batch = random.sample(experience, 1000)
+        for experience_event in experience_batch:
+            update = ((experience_event[2] + calculate_value(experience_event[1],weights) - calculate_value(experience_event[0],weights))*experience_event[0]).reshape(-1,1)
+            print(update)
+            weights = update+weights
+        print(weights)
+
+    #### Diverges
     
     
     
